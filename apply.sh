@@ -1,19 +1,7 @@
 #!/bin/bash
 
-cd frameworks/libs/net
-echo "Applying patches to frameworks/libs/net"
-git am --signoff < ~/7420_patches-lineage-20.0/frameworks_libs_net/0001-Support-no-BPF-usecase.patch
-cd ../../../
-cd system/netd
-echo "Applying patches to system/netd"
-git am --signoff < ~/7420_patches-lineage-20.0/system_netd/0001-Support-no-bpf-usecase.patch
-git am --signoff < ~/7420_patches-lineage-20.0/system_netd/0002-Don-t-abort-in-case-of-cgroup-bpf-setup-fail-since-s.patch
-cd ../../
 cd packages/modules/Connectivity
 echo "Applying patches to packages/modules/Connectivity"
-git am --signoff < ~/7420_patches-lineage-20.0/packages_modules_Connectivity/0001-Allow-failing-to-load-bpf-programs-for-BPF-less-devi.patch
-git am --signoff < ~/7420_patches-lineage-20.0/packages_modules_Connectivity/0002-BpfMap-implemented-new-checks-for-kernel-4.14-but-as.patch
-git am --signoff < ~/7420_patches-lineage-20.0/packages_modules_Connectivity/0003-Dont-delete-UID-from-BpfMap-on-BPF-less-kernel.patch
 git am --signoff < ~/7420_patches-lineage-20.0/packages_modules_Connectivity/0004-Bring-back-traffic-indicators-for-legacy-devices.patch
 cd ../
 cd NetworkStack
@@ -24,11 +12,6 @@ cd adb
 echo "Applying patches to adb"
 git am --signoff < ~/7420_patches-lineage-20.0/packages_modules_adb/0001-adb-Bring-back-support-for-legacy-FunctionFS.patch
 cd ../../../
-cd system/bpf
-echo "Applying patches to system/bpf"
-git am --signoff < ~/7420_patches-lineage-20.0/system_bpf/0001-Support-no-bpf-usecase.patch
-git am --signoff < ~/7420_patches-lineage-20.0/system_bpf/0002-Revert-detect-inability-to-write-to-index-0-of-bpf-m.patch
-cd ..
 cd security
 echo "Applying patches to security"
 git am --signoff < ~/7420_patches-lineage-20.0/system_security/0001-keystore-hackup.patch
