@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cd art
+git am --signoff < ~/7420_patches-lineage-19.1/android_art/0002-Cache-operations-dont-segfault-on-our-kernel.patch
+cd ../
 cd frameworks/base
 git am --signoff < ~/7420_patches-lineage-19.1/frameworks_base/0002-Some-services-should-just-stfu.patch
 git am --signoff < ~/7420_patches-lineage-19.1/frameworks_base/0003-Stop-davey-messages-when-using-latch_unsignalled.patch

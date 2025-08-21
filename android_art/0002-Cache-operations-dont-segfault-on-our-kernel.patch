@@ -1,0 +1,48 @@
+From 10d76a324ebd32d6b7c54e3580fd827a83f31c6b Mon Sep 17 00:00:00 2001
+From: Fakeman <55951275+fakemanoan@users.noreply.github.com>
+Date: Wed, 3 Jan 2024 15:29:04 +0000
+Subject: [PATCH] Cache operations dont segfault on our kernel
+
+This fix was backported by samsung, so we can skip this check
+
+Change-Id: I33bd99958593658e019740bc6adcc597b46662a4
+---
+ libartbase/base/utils.cc | 22 ++--------------------
+ 1 file changed, 2 insertions(+), 20 deletions(-)
+
+diff --git a/libartbase/base/utils.cc b/libartbase/base/utils.cc
+index ba62f30bdc..3ae5a1ec21 100644
+--- a/libartbase/base/utils.cc
++++ b/libartbase/base/utils.cc
+@@ -159,26 +159,8 @@ bool FlushCpuCaches(void* begin, void* end) {
+ #endif
+ 
+ bool CacheOperationsMaySegFault() {
+-#if defined(__linux__) && defined(__aarch64__)
+-  // Avoid issue on older ARM64 kernels where data cache operations could be classified as writes
+-  // and cause segmentation faults. This was fixed in Linux 3.11rc2:
+-  //
+-  // https://github.com/torvalds/linux/commit/db6f41063cbdb58b14846e600e6bc3f4e4c2e888
+-  //
+-  // This behaviour means we should avoid the dual view JIT on the device. This is just
+-  // an issue when running tests on devices that have an old kernel.
+-  static constexpr int kRequiredMajor = 3;
+-  static constexpr int kRequiredMinor = 12;
+-  struct utsname uts;
+-  int major, minor;
+-  if (uname(&uts) != 0 ||
+-      strcmp(uts.sysname, "Linux") != 0 ||
+-      sscanf(uts.release, "%d.%d", &major, &minor) != 2 ||
+-      (major < kRequiredMajor || (major == kRequiredMajor && minor < kRequiredMinor))) {
+-    return true;
+-  }
+-#endif
+-  return false;
++// Our kernel, despite being 3.10, incorporates the cache fix stated above.
++    return false;
+ }
+ 
+ uint32_t GetTid() {
+-- 
+2.25.1
+
