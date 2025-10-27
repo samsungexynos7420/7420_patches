@@ -47,15 +47,6 @@ git am --signoff < ~/7420_patches-lineage-20.0/frameworks_base/0002-Revert-Cache
 git am --signoff < ~/7420_patches-lineage-20.0/frameworks_base/0003-Revert-CachedAppOptimizer-don-t-hardcode-freezer-pat.patch
 git am --signoff < ~/7420_patches-lineage-20.0/frameworks_base/0004-CachedAppOptimizer-revert-freezer-to-cgroups-v1.patch
 cd ../../
-cd art
-echo "Applying patches to art"
-git am --signoff < ~/7420_patches-lineage-20.0/android_art/0001-art-Conditionally-remove-version-check-for-memfd_cre.patch
-git am --signoff < ~/7420_patches-lineage-20.0/android_art/0002-Cache-operations-dont-segfault-on-our-kernel.patch
-cd ../
-cd external/perfetto
-echo "Applying patches to external/perfetto"
-git am --signoff < ~/7420_patches-lineage-20.0/external_perfetto/0001-perfetto-Conditionally-remove-version-check-for-memf.patch
-cd ../../
 cd system/core
 echo "Applying patches to system/core"
 git am --signoff < ~/7420_patches-lineage-20.0/system_core/0001-Fix-support-for-devices-without-cgroupv2-support.patch
@@ -71,6 +62,5 @@ cd ../../../
 cd vendor/lineage
 echo "Applying patches to vendor/lineage"
 git am --signoff < ~/7420_patches-lineage-20.0/vendor_lineage/0001-Forcibly-disable-secure-adb-in-all-circumstances.patch
-git am --signoff < ~/7420_patches-lineage-20.0/vendor_lineage/0002-Add-back-TARGET_HAS_MEMFD_BACKPORT.patch
 cd ../../
 
