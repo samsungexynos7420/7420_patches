@@ -18,8 +18,3 @@ cd frameworks/base
 echo "Applying patches to frameworks/base"
 git am --signoff < ~/7420_patches-lineage-20.0/frameworks_base/0001-Revert-fp-always-on-changes.patch
 cd ../../
-cd vendor/lineage
-echo "Applying patches to vendor/lineage"
-git am --signoff < ~/7420_patches-lineage-20.0/vendor_lineage/0001-Forcibly-disable-secure-adb-in-all-circumstances.patch
-cd ../../
-
