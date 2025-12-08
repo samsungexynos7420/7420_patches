@@ -1,0 +1,52 @@
+From 5268140dcd6b0a40308e8e69b544119099068e22 Mon Sep 17 00:00:00 2001
+From: Fakeman <55951275+fakemanoan@users.noreply.github.com>
+Date: Mon, 30 Jun 2025 08:21:40 +0100
+Subject: [PATCH 7/9] Revert "Switch to jemalloc memory allocator"
+
+This reverts commit 7a907f0902d6173954c7cbbbf5f73db18b7ae6f3.
+---
+ libc/Android.bp | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/libc/Android.bp b/libc/Android.bp
+index b18b18776..fd14aea57 100644
+--- a/libc/Android.bp
++++ b/libc/Android.bp
+@@ -100,6 +100,9 @@ cc_defaults {
+                 malloc_pattern_fill_contents: {
+                     cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+                 },
++                malloc_not_svelte: {
++                    cflags: ["-DUSE_SCUDO"],
++                },
+             },
+         },
+         lib32: {
+@@ -110,6 +113,9 @@ cc_defaults {
+                 malloc_pattern_fill_contents: {
+                     cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+                 },
++                malloc_not_svelte_libc32: {
++                    cflags: ["-DUSE_SCUDO"],
++                },
+             },
+         },
+     },
+@@ -160,6 +166,14 @@ cc_defaults {
+         "libc_jemalloc_wrapper",
+     ],
+     header_libs: ["gwp_asan_headers"],
++    multilib: {
++        lib64: {
++            product_variables: libc_scudo_product_variables,
++        },
++        lib32: {
++            product_variables: libc32_scudo_product_variables,
++        }
++    },
+ }
+ 
+ // Functions not implemented by jemalloc directly, or that need to
+-- 
+2.43.0
+

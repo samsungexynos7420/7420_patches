@@ -1,0 +1,41 @@
+From 0d2d147fd558a56166714899a045b56edb049ab5 Mon Sep 17 00:00:00 2001
+From: Fakeman <55951275+fakemanoan@users.noreply.github.com>
+Date: Sat, 6 Dec 2025 21:50:24 +0000
+Subject: [PATCH 9/9] Reapply "Rewrite renameat()."
+
+This reverts commit e854b214784387e941e52e2be1ca75711e5d35e3.
+---
+ libc/SYSCALLS.TXT      | 1 -
+ libc/bionic/rename.cpp | 6 +++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/libc/SYSCALLS.TXT b/libc/SYSCALLS.TXT
+index bf279f4da..0db5d79aa 100644
+--- a/libc/SYSCALLS.TXT
++++ b/libc/SYSCALLS.TXT
+@@ -162,7 +162,6 @@ int linkat(int, const char*, int, const char*, int)  all
+ int mkdirat(int, const char*, mode_t)  all
+ int mknodat(int, const char*, mode_t, dev_t)  all
+ ssize_t readlinkat(int, const char*, char*, size_t)  all
+-int renameat(int, const char*, int, const char*)  all
+ int renameat2(int, const char*, int, const char*, unsigned)  all
+ int symlinkat(const char*, int, const char*)  all
+ int unlinkat(int, const char*, int)   all
+diff --git a/libc/bionic/rename.cpp b/libc/bionic/rename.cpp
+index 82955596b..89786f7a0 100644
+--- a/libc/bionic/rename.cpp
++++ b/libc/bionic/rename.cpp
+@@ -30,5 +30,9 @@
+ #include <stdio.h>
+ 
+ int rename(const char* old_path, const char* new_path) {
+-  return renameat(AT_FDCWD, old_path, AT_FDCWD, new_path);
++  return renameat2(AT_FDCWD, old_path, AT_FDCWD, new_path, 0);
++}
++
++int renameat(int old_dir_fd, const char* old_path, int new_dir_fd, const char* new_path) {
++  return renameat2(old_dir_fd, old_path, new_dir_fd, new_path, 0);
+ }
+-- 
+2.43.0
+

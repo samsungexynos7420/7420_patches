@@ -1,0 +1,51 @@
+From 1835c67cbe7cad3ef62a664b3ad7952acefbb69b Mon Sep 17 00:00:00 2001
+From: Fakeman <55951275+fakemanoan@users.noreply.github.com>
+Date: Mon, 30 Jun 2025 08:22:06 +0100
+Subject: [PATCH 8/9] Revert "Implement per-process target SDK version
+ override."
+
+This reverts commit 36a170e9632e20bc4b2f63c2972bd59a393bc16e.
+---
+ linker/Android.bp |  1 -
+ linker/linker.cpp | 13 +------------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
+
+diff --git a/linker/Android.bp b/linker/Android.bp
+index c5552d728..33fdcea3b 100644
+--- a/linker/Android.bp
++++ b/linker/Android.bp
+@@ -76,7 +76,6 @@ cc_defaults {
+     name: "linker_defaults",
+     defaults: [
+         "shim_libs_defaults",
+-        "process_sdk_version_overrides_defaults",
+     ],
+     arch: {
+         arm: {
+diff --git a/linker/linker.cpp b/linker/linker.cpp
+index 8081ee005..f9bb02913 100644
+--- a/linker/linker.cpp
++++ b/linker/linker.cpp
+@@ -3716,18 +3716,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
+     }
+   }
+ 
+-  uint32_t target_sdk = config->target_sdk_version();
+-#ifdef SDK_VERSION_OVERRIDES
+-  for (const auto& entry : android::base::Split(SDK_VERSION_OVERRIDES, " ")) {
+-    auto splitted = android::base::Split(entry, "=");
+-    if (splitted.size() == 2 && splitted[0] == executable_path) {
+-      target_sdk = static_cast<uint32_t>(std::stoul(splitted[1]));
+-      break;
+-    }
+-  }
+-  DEBUG("Target SDK for %s = %d", executable_path, target_sdk);
+-#endif
+-  set_application_target_sdk_version(target_sdk);
++  set_application_target_sdk_version(config->target_sdk_version());
+ 
+   std::vector<android_namespace_t*> created_namespaces;
+   created_namespaces.reserve(namespaces.size());
+-- 
+2.43.0
+
