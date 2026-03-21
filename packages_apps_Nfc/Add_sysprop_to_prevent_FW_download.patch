@@ -1,0 +1,41 @@
+From d1b2aa3248b45692e3246c41108e9abcf0509d98 Mon Sep 17 00:00:00 2001
+From: Tony Layher <layhertony@gmail.com>
+Date: Fri, 13 Feb 2015 22:58:19 -0500
+Subject: [PATCH] NFCService: Add sysprop to prevent FW download during boot  with NFC off.
+
+ * The SEC NFC chip used by samsung for the
+   Note4, Note Edge, Alpha and S5-mini does not handle
+   the download attempt on boot well if NFC
+   is off.
+ * If download is attempted while booting
+   with NFC off, the NFC device is opened
+   and never closed, resulting in a kernel
+   wake lock.  It also prevents turning
+   NFC on due to the device already being
+   open with the service in a tranisition
+   from off -> on.
+ * Devices can set the property ro.nfc.fw_dl_on_boot
+   to false to signify the use of the
+   sec NFC chip. (S3FWRN)
+
+Change-Id: Ifb28074eb473ab5b7e4b82a14336ee51972d3975
+---
+
+diff --git a/src/com/android/nfc/NfcService.java b/src/com/android/nfc/NfcService.java
+index c3ded6a..7f50718 100644
+--- a/src/com/android/nfc/NfcService.java
++++ b/src/com/android/nfc/NfcService.java
+@@ -703,9 +703,12 @@
+                     if (mPrefs.getBoolean(PREF_NFC_ON, NFC_ON_DEFAULT)) {
+                         Log.d(TAG, "NFC is on. Doing normal stuff");
+                         initialized = enableInternal();
+-                    } else {
++                    } else if (SystemProperties.getBoolean("ro.nfc.fw_dl_on_boot", true)) {
+                         Log.d(TAG, "NFC is off.  Checking firmware version");
+                         initialized = mDeviceHost.checkFirmware();
++                    } else {
++                        Log.d(TAG, "NFC is off. Skipping firmware version check");
++                        initialized = true;
+                     }
+ 
+                     if (initialized) {
