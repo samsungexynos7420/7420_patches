@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "\n Applying frameworks/native patches..."
+cd frameworks/native
+git am --signoff < ~/7420_patches-lineage-18.1/frameworks_native/0001-inputflinger-disable-touch-input-while-using-a-stylus.patch
+cd ../../
+
 echo "\n Applying batteryextender-eleven patches..."
 
 cd device/lineage/sepolicy
